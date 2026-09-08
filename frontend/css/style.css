@@ -1,0 +1,14 @@
+/* estilos minimos, so pra nao ficar tudo colado na borda da tela */
+
+body {
+    padding-top: 20px;
+    padding-bottom: 40px;
+}
+
+.container {
+    max-width: 960px;
+}
+
+.mensagem-erro {
+    color: #b02a37;
+}

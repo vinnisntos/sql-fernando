@@ -1,0 +1,19 @@
+# banco de dados gerado localmente (nao deve ir pro repositorio, ele e recriado sozinho)
+database/biblioteca.db
+database/biblioteca.db-journal
+database/biblioteca.db-wal
+database/biblioteca.db-shm
+
+# cache do python
+__pycache__/
+*.pyc
+
+# arquivo de regras do trabalho (nao faz parte da entrega)
+REGRAS- NP1.pdf
+
+# arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# pasta de controle do Claude Code (nao faz parte do trabalho)
+.claude/
