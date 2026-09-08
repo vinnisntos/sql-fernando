@@ -19,13 +19,25 @@ function mostrarMensagem(texto, tipo) {
     );
 }
 
+function escapeHtml(texto) {
+    if (texto === null || texto === undefined) {
+        return "";
+    }
+    return String(texto)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
 function carregarSelects() {
     // disponivel=1 pra so trazer livro que da pra emprestar
     $.getJSON(URL_API_LIVROS + "?disponivel=1", function (livros) {
         var opcoes = '<option value="">Selecione...</option>';
         for (var i = 0; i < livros.length; i++) {
             opcoes += '<option value="' + livros[i].id_livro + '">' +
-                livros[i].titulo + " (disponiveis: " + livros[i].qtd_disponivel + ")" +
+                escapeHtml(livros[i].titulo) + " (disponiveis: " + livros[i].qtd_disponivel + ")" +
                 "</option>";
         }
         $("#id_livro").html(opcoes);
@@ -34,7 +46,7 @@ function carregarSelects() {
     $.getJSON(URL_API_MEMBROS, function (membros) {
         var opcoes = '<option value="">Selecione...</option>';
         for (var i = 0; i < membros.length; i++) {
-            opcoes += '<option value="' + membros[i].id_membro + '">' + membros[i].nome + "</option>";
+            opcoes += '<option value="' + membros[i].id_membro + '">' + escapeHtml(membros[i].nome) + "</option>";
         }
         $("#id_membro").html(opcoes);
     });
@@ -59,8 +71,8 @@ function carregarEmprestimos() {
             linhas +=
                 "<tr>" +
                 "<td>" + e.id_emprestimo + "</td>" +
-                "<td>" + e.titulo_livro + "</td>" +
-                "<td>" + e.nome_membro + "</td>" +
+                "<td>" + escapeHtml(e.titulo_livro) + "</td>" +
+                "<td>" + escapeHtml(e.nome_membro) + "</td>" +
                 "<td>" + e.data_emprestimo + "</td>" +
                 "<td>" + e.data_devolucao_prevista + "</td>" +
                 "<td>" + (e.data_devolucao_real || "-") + "</td>" +

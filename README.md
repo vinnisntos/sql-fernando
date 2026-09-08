@@ -23,7 +23,9 @@ Regras que implementei:
 - A quantidade disponível nunca pode passar da quantidade total (tem um CHECK no banco garantindo isso).
 
 O sistema faz CRUD completo (criar, listar, editar, excluir) em autores,
-livros, membros e empréstimos.
+livros e membros. Em empréstimos não faz sentido "editar" um registro já
+feito, então o CRUD lá é: criar (emprestar), listar, atualizar (devolver) e
+excluir.
 
 Tecnologia usada:
 

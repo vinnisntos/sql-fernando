@@ -13,6 +13,18 @@ $(document).ready(function () {
     });
 });
 
+function escapeHtml(texto) {
+    if (texto === null || texto === undefined) {
+        return "";
+    }
+    return String(texto)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
 function mostrarMensagem(texto, tipo) {
     var classe = tipo === "erro" ? "alert-danger" : "alert-success";
     $("#area-mensagem").html(
@@ -28,8 +40,8 @@ function carregarAutores() {
             linhas +=
                 "<tr>" +
                 "<td>" + a.id_autor + "</td>" +
-                "<td>" + a.nome + "</td>" +
-                "<td>" + (a.nacionalidade || "") + "</td>" +
+                "<td>" + escapeHtml(a.nome) + "</td>" +
+                "<td>" + escapeHtml(a.nacionalidade) + "</td>" +
                 "<td>" +
                 '<button class="btn btn-sm btn-warning me-1" onclick="editarAutor(' + a.id_autor + ')">Editar</button>' +
                 '<button class="btn btn-sm btn-danger" onclick="excluirAutor(' + a.id_autor + ')">Excluir</button>' +

@@ -23,6 +23,26 @@ def listar_emprestimos():
         conexao.close()
 
 
+def buscar_emprestimo(id_emprestimo):
+    conexao = get_connection()
+    try:
+        cursor = conexao.execute(
+            """SELECT e.id_emprestimo, e.data_emprestimo, e.data_devolucao_prevista,
+                      e.data_devolucao_real, e.status,
+                      e.id_livro, l.titulo AS titulo_livro,
+                      e.id_membro, m.nome AS nome_membro
+               FROM emprestimos e
+               JOIN livros l ON l.id_livro = e.id_livro
+               JOIN membros m ON m.id_membro = e.id_membro
+               WHERE e.id_emprestimo = ?""",
+            (id_emprestimo,),
+        )
+        linha = cursor.fetchone()
+        return dict(linha) if linha else None
+    finally:
+        conexao.close()
+
+
 def registrar_emprestimo(id_livro, id_membro, dias_prazo=PRAZO_PADRAO_DIAS):
     conexao = get_connection()
     try:

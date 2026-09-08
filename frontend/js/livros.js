@@ -22,11 +22,23 @@ function mostrarMensagem(texto, tipo) {
     );
 }
 
+function escapeHtml(texto) {
+    if (texto === null || texto === undefined) {
+        return "";
+    }
+    return String(texto)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
 function carregarAutoresNoSelect() {
     $.getJSON(URL_API_AUTORES, function (autores) {
         var opcoes = '<option value="">Selecione...</option>';
         $.each(autores, function (i, a) {
-            opcoes += '<option value="' + a.id_autor + '">' + a.nome + "</option>";
+            opcoes += '<option value="' + a.id_autor + '">' + escapeHtml(a.nome) + "</option>";
         });
         $("#id_autor").html(opcoes);
     });
@@ -40,10 +52,10 @@ function carregarLivros() {
             linhas +=
                 "<tr>" +
                 "<td>" + l.id_livro + "</td>" +
-                "<td>" + l.titulo + "</td>" +
-                "<td>" + l.nome_autor + "</td>" +
+                "<td>" + escapeHtml(l.titulo) + "</td>" +
+                "<td>" + escapeHtml(l.nome_autor) + "</td>" +
                 "<td>" + (l.ano_publicacao || "") + "</td>" +
-                "<td>" + (l.genero || "") + "</td>" +
+                "<td>" + escapeHtml(l.genero) + "</td>" +
                 "<td>" + l.qtd_total + "</td>" +
                 "<td>" + l.qtd_disponivel + "</td>" +
                 "<td>" +

@@ -17,14 +17,17 @@ def get_connection():
 
 
 def inicializar_banco():
-    banco_e_novo = not os.path.exists(CAMINHO_BANCO)
-
     conexao = get_connection()
 
     with open(CAMINHO_SCHEMA, "r", encoding="utf-8") as arquivo:
         conexao.executescript(arquivo.read())
 
-    if banco_e_novo:
+    # so popula com dados de exemplo se a tabela de autores estiver vazia
+    # (e nao so quando o arquivo .db acabou de ser criado)
+    cursor = conexao.execute("SELECT COUNT(*) FROM autores")
+    banco_vazio = cursor.fetchone()[0] == 0
+
+    if banco_vazio:
         with open(CAMINHO_SEED, "r", encoding="utf-8") as arquivo:
             conexao.executescript(arquivo.read())
         conexao.commit()

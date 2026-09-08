@@ -29,6 +29,17 @@ PADRAO_EMPRESTIMOS = re.compile(r"^/api/emprestimos/(\d+)$")
 PADRAO_DEVOLUCAO = re.compile(r"^/api/emprestimos/(\d+)/devolver$")
 
 
+def ler_int(dados, campo):
+    # tenta converter um campo do JSON pra numero; None se nao veio nada
+    valor = dados.get(campo)
+    if valor is None or valor == "":
+        return None
+    try:
+        return int(valor)
+    except (TypeError, ValueError):
+        raise ValueError("O campo '%s' precisa ser um numero." % campo)
+
+
 class ManipuladorRequisicoes(BaseHTTPRequestHandler):
 
     # ---------- utilidades ----------
@@ -61,7 +72,8 @@ class ManipuladorRequisicoes(BaseHTTPRequestHandler):
         # impede acessar arquivos fora da pasta frontend (ex: ../backend/db.py)
         caminho_relativo = caminho_url.lstrip("/")
         caminho_absoluto = os.path.normpath(os.path.join(PASTA_FRONTEND, caminho_relativo))
-        if not caminho_absoluto.startswith(PASTA_FRONTEND):
+        dentro_da_pasta = caminho_absoluto == PASTA_FRONTEND or caminho_absoluto.startswith(PASTA_FRONTEND + os.sep)
+        if not dentro_da_pasta:
             self.send_error(403, "Acesso negado")
             return
 
@@ -124,6 +136,13 @@ class ManipuladorRequisicoes(BaseHTTPRequestHandler):
             if caminho == "/api/emprestimos":
                 return self.enviar_json(200, emprestimos.listar_emprestimos())
 
+            m = PADRAO_EMPRESTIMOS.match(caminho)
+            if m:
+                emprestimo = emprestimos.buscar_emprestimo(int(m.group(1)))
+                if emprestimo is None:
+                    return self.enviar_json(404, {"erro": "Emprestimo nao encontrado."})
+                return self.enviar_json(200, emprestimo)
+
             if caminho.startswith("/api/"):
                 return self.enviar_json(404, {"erro": "Rota nao encontrada."})
 
@@ -144,12 +163,15 @@ class ManipuladorRequisicoes(BaseHTTPRequestHandler):
                 return self.enviar_json(201, {"id_autor": novo_id})
 
             if caminho == "/api/livros":
+                qtd_total = ler_int(dados, "qtd_total")
+                id_autor = ler_int(dados, "id_autor")
+                ano_publicacao = ler_int(dados, "ano_publicacao")
+                if qtd_total is None:
+                    raise ValueError("Quantidade total e obrigatoria.")
+                if id_autor is None:
+                    raise ValueError("Autor e obrigatorio.")
                 novo_id = livros.criar_livro(
-                    dados.get("titulo"),
-                    dados.get("ano_publicacao"),
-                    dados.get("genero"),
-                    dados.get("qtd_total"),
-                    dados.get("id_autor"),
+                    dados.get("titulo"), ano_publicacao, dados.get("genero"), qtd_total, id_autor
                 )
                 return self.enviar_json(201, {"id_livro": novo_id})
 
@@ -160,9 +182,11 @@ class ManipuladorRequisicoes(BaseHTTPRequestHandler):
                 return self.enviar_json(201, {"id_membro": novo_id})
 
             if caminho == "/api/emprestimos":
-                novo_id = emprestimos.registrar_emprestimo(
-                    dados.get("id_livro"), dados.get("id_membro")
-                )
+                id_livro = ler_int(dados, "id_livro")
+                id_membro = ler_int(dados, "id_membro")
+                if id_livro is None or id_membro is None:
+                    raise ValueError("Livro e membro sao obrigatorios.")
+                novo_id = emprestimos.registrar_emprestimo(id_livro, id_membro)
                 return self.enviar_json(201, {"id_emprestimo": novo_id})
 
             m = PADRAO_DEVOLUCAO.match(caminho)
@@ -196,13 +220,15 @@ class ManipuladorRequisicoes(BaseHTTPRequestHandler):
             m = PADRAO_LIVROS.match(caminho)
             if m:
                 id_livro = int(m.group(1))
+                qtd_total = ler_int(dados, "qtd_total")
+                id_autor = ler_int(dados, "id_autor")
+                ano_publicacao = ler_int(dados, "ano_publicacao")
+                if qtd_total is None:
+                    raise ValueError("Quantidade total e obrigatoria.")
+                if id_autor is None:
+                    raise ValueError("Autor e obrigatorio.")
                 ok = livros.atualizar_livro(
-                    id_livro,
-                    dados.get("titulo"),
-                    dados.get("ano_publicacao"),
-                    dados.get("genero"),
-                    dados.get("qtd_total"),
-                    dados.get("id_autor"),
+                    id_livro, dados.get("titulo"), ano_publicacao, dados.get("genero"), qtd_total, id_autor
                 )
                 if not ok:
                     return self.enviar_json(404, {"erro": "Livro nao encontrado."})

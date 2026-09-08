@@ -56,6 +56,9 @@ def criar_livro(titulo, ano_publicacao, genero, qtd_total, id_autor):
 def atualizar_livro(id_livro, titulo, ano_publicacao, genero, qtd_total, id_autor):
     conexao = get_connection()
     try:
+        if qtd_total < 0:
+            raise ValueError("Quantidade total nao pode ser negativa.")
+
         cursor = conexao.execute("SELECT qtd_total, qtd_disponivel FROM livros WHERE id_livro = ?", (id_livro,))
         atual = cursor.fetchone()
         if atual is None:

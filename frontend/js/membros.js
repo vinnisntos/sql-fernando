@@ -21,6 +21,18 @@ function mostrarMensagem(texto, tipo) {
     $("#area-mensagem").html('<div class="alert ' + classe + '">' + texto + "</div>");
 }
 
+function escapeHtml(texto) {
+    if (texto === null || texto === undefined) {
+        return "";
+    }
+    return String(texto)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
 function carregarMembros() {
     $.getJSON(URL_API, function (membros) {
         var linhas = "";
@@ -29,9 +41,9 @@ function carregarMembros() {
             linhas +=
                 "<tr>" +
                 "<td>" + m.id_membro + "</td>" +
-                "<td>" + m.nome + "</td>" +
-                "<td>" + m.email + "</td>" +
-                "<td>" + (m.telefone || "") + "</td>" +
+                "<td>" + escapeHtml(m.nome) + "</td>" +
+                "<td>" + escapeHtml(m.email) + "</td>" +
+                "<td>" + escapeHtml(m.telefone) + "</td>" +
                 "<td>" + m.data_cadastro + "</td>" +
                 "<td>" +
                 '<button class="btn btn-sm btn-warning me-1" onclick="editarMembro(' + m.id_membro + ')">Editar</button>' +
