@@ -8,8 +8,11 @@ database/biblioteca.db-shm
 __pycache__/
 *.pyc
 
-# arquivo de regras do trabalho (nao faz parte da entrega)
+# material do professor / regras do trabalho (nao faz parte da entrega)
 REGRAS- NP1.pdf
+Aula-03-09-26.pdf
+aula2.pdf
+Trabalho1.pdf
 
 # arquivos de sistema
 .DS_Store

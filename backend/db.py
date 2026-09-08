@@ -10,9 +10,7 @@ CAMINHO_SEED = os.path.join(PASTA_RAIZ, "database", "seed.sql")
 
 
 def get_connection():
-    # timeout=10 pra nao dar "database is locked" quando duas requisicoes
-    # chegam quase junto
-    conexao = sqlite3.connect(CAMINHO_BANCO, timeout=10)
+    conexao = sqlite3.connect(CAMINHO_BANCO)
     conexao.execute("PRAGMA foreign_keys = ON")
     conexao.row_factory = sqlite3.Row
     return conexao
@@ -22,7 +20,6 @@ def inicializar_banco():
     banco_e_novo = not os.path.exists(CAMINHO_BANCO)
 
     conexao = get_connection()
-    conexao.execute("PRAGMA journal_mode = WAL")  # ajuda a nao travar o banco
 
     with open(CAMINHO_SCHEMA, "r", encoding="utf-8") as arquivo:
         conexao.executescript(arquivo.read())

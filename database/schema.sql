@@ -18,10 +18,10 @@ CREATE TABLE IF NOT EXISTS livros (
     titulo         TEXT NOT NULL,
     ano_publicacao INTEGER,
     genero         TEXT,
-    qtd_total      INTEGER NOT NULL CHECK (qtd_total >= 0),
-    qtd_disponivel INTEGER NOT NULL CHECK (qtd_disponivel >= 0),
+    qtd_total      INTEGER NOT NULL CONSTRAINT chk_qtd_total CHECK (qtd_total >= 0),
+    qtd_disponivel INTEGER NOT NULL CONSTRAINT chk_qtd_disponivel CHECK (qtd_disponivel >= 0),
     id_autor       INTEGER NOT NULL,
-    CHECK (qtd_disponivel <= qtd_total),
+    CONSTRAINT chk_disponivel_menor_total CHECK (qtd_disponivel <= qtd_total),
     FOREIGN KEY (id_autor) REFERENCES autores (id_autor) ON DELETE RESTRICT
 );
 
@@ -42,7 +42,8 @@ CREATE TABLE IF NOT EXISTS emprestimos (
     data_emprestimo          TEXT NOT NULL,
     data_devolucao_prevista  TEXT NOT NULL,
     data_devolucao_real      TEXT,
-    status                   TEXT NOT NULL DEFAULT 'emprestado' CHECK (status IN ('emprestado', 'devolvido')),
+    status                   TEXT NOT NULL DEFAULT 'emprestado'
+                             CONSTRAINT chk_status CHECK (status IN ('emprestado', 'devolvido')),
     FOREIGN KEY (id_livro) REFERENCES livros (id_livro) ON DELETE RESTRICT,
     FOREIGN KEY (id_membro) REFERENCES membros (id_membro) ON DELETE RESTRICT
 );

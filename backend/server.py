@@ -6,7 +6,7 @@ import mimetypes
 import os
 import re
 import sqlite3
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qs
 
 import autores
@@ -273,7 +273,7 @@ class ManipuladorRequisicoes(BaseHTTPRequestHandler):
 
 def main():
     inicializar_banco()
-    servidor = ThreadingHTTPServer(("localhost", PORTA), ManipuladorRequisicoes)
+    servidor = HTTPServer(("localhost", PORTA), ManipuladorRequisicoes)
     print("Servidor rodando em http://localhost:{}".format(PORTA))
     print("Pressione Ctrl+C para parar.")
     try:
