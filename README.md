@@ -5,7 +5,7 @@ Trabalho de Banco de Dados (NP1).
 ## Identificação
 
 - Curso: Análise e Desenvolvimento de Sistemas
-- Turma: DS4S17
+- Turma: DS4S17 e DS3S17
 - Integrantes:
   - Vinnicius Gabriel Matos Dos Santos - RA H76DJJ6
   - Fernando Aparecido dos Santos - RA H761352
