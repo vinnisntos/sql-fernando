@@ -47,3 +47,8 @@ CREATE TABLE IF NOT EXISTS emprestimos (
     FOREIGN KEY (id_livro) REFERENCES livros (id_livro) ON DELETE RESTRICT,
     FOREIGN KEY (id_membro) REFERENCES membros (id_membro) ON DELETE RESTRICT
 );
+
+-- Indices nas FKs (agiliza os JOINs de listar_emprestimos e a busca por livros de um autor)
+CREATE INDEX IF NOT EXISTS idx_livros_id_autor ON livros (id_autor);
+CREATE INDEX IF NOT EXISTS idx_emprestimos_id_livro ON emprestimos (id_livro);
+CREATE INDEX IF NOT EXISTS idx_emprestimos_id_membro ON emprestimos (id_membro);
