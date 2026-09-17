@@ -28,6 +28,8 @@ PADRAO_MEMBROS = re.compile(r"^/api/membros/(\d+)$")
 PADRAO_EMPRESTIMOS = re.compile(r"^/api/emprestimos/(\d+)$")
 PADRAO_DEVOLUCAO = re.compile(r"^/api/emprestimos/(\d+)/devolver$")
 
+PADRAO_EMAIL = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+
 
 def ler_int(dados, campo):
     # tenta converter um campo do JSON pra numero; None se nao veio nada
@@ -38,6 +40,12 @@ def ler_int(dados, campo):
         return int(valor)
     except (TypeError, ValueError):
         raise ValueError("O campo '%s' precisa ser um numero." % campo)
+
+
+def validar_email(email):
+    # checagem simples de formato, so pra pegar erro de digitacao antes do banco
+    if not email or not PADRAO_EMAIL.match(email):
+        raise ValueError("O email informado nao e valido.")
 
 
 class ManipuladorRequisicoes(BaseHTTPRequestHandler):
@@ -176,6 +184,7 @@ class ManipuladorRequisicoes(BaseHTTPRequestHandler):
                 return self.enviar_json(201, {"id_livro": novo_id})
 
             if caminho == "/api/membros":
+                validar_email(dados.get("email"))
                 novo_id = membros.criar_membro(
                     dados.get("nome"), dados.get("email"), dados.get("telefone")
                 )
@@ -237,6 +246,7 @@ class ManipuladorRequisicoes(BaseHTTPRequestHandler):
             m = PADRAO_MEMBROS.match(caminho)
             if m:
                 id_membro = int(m.group(1))
+                validar_email(dados.get("email"))
                 ok = membros.atualizar_membro(
                     id_membro, dados.get("nome"), dados.get("email"), dados.get("telefone")
                 )
