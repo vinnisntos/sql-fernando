@@ -1,0 +1,7 @@
+# normaliza quebra de linha pra LF no repositorio, evitando diff gigante
+# so por causa de CRLF quando alguem do grupo usa Windows
+* text=auto eol=lf
+
+*.jpg binary
+*.png binary
+*.db binary
