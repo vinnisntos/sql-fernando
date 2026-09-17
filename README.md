@@ -83,6 +83,31 @@ O script de criação das tabelas está em `database/schema.sql` (tem as 4
 tabelas com PK, FK e as restrições). Tem também um `database/seed.sql`
 com uns dados de exemplo só pra não abrir tudo vazio.
 
+## Rotas da API
+
+| Método | Rota | Descrição |
+| --- | --- | --- |
+| GET | `/api/autores` | Lista todos os autores |
+| GET | `/api/autores/:id` | Busca um autor |
+| POST | `/api/autores` | Cria um autor |
+| PUT | `/api/autores/:id` | Atualiza um autor |
+| DELETE | `/api/autores/:id` | Exclui um autor |
+| GET | `/api/livros` | Lista livros (aceita `?disponivel=1`) |
+| GET | `/api/livros/:id` | Busca um livro |
+| POST | `/api/livros` | Cria um livro |
+| PUT | `/api/livros/:id` | Atualiza um livro |
+| DELETE | `/api/livros/:id` | Exclui um livro |
+| GET | `/api/membros` | Lista todos os membros |
+| GET | `/api/membros/:id` | Busca um membro |
+| POST | `/api/membros` | Cria um membro |
+| PUT | `/api/membros/:id` | Atualiza um membro |
+| DELETE | `/api/membros/:id` | Exclui um membro |
+| GET | `/api/emprestimos` | Lista todos os empréstimos |
+| GET | `/api/emprestimos/:id` | Busca um empréstimo |
+| POST | `/api/emprestimos` | Registra um empréstimo |
+| POST | `/api/emprestimos/:id/devolver` | Registra a devolução |
+| DELETE | `/api/emprestimos/:id` | Exclui um empréstimo |
+
 ## Como rodar
 
 Só precisa ter Python 3 instalado, não precisa instalar nenhuma
